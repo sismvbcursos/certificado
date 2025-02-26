@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Validação de Certificado</title>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Ícone da página (favicon) -->
+    <link rel="icon" href="icone.png" type="image/x-icon">
     <style>
         * {
             margin: 0;
@@ -111,6 +112,26 @@
             margin-top: 10px;
             margin-bottom: 10px;
         }
+
+        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 500;
+            line-height: 1.1;
+            color: inherit;
+        }
+
+        .login-box-body {
+            box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.8);
+            background: rgba(255, 255, 255, 0.9);
+            color: #666666 !important;
+        }
+
+        .login-box-body, .register-box-body {
+            background: #fff;
+            padding: 20px;
+            border-top: 0;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -127,47 +148,57 @@
     </div>
 
     <div id="modal" class="modal">
-        <div class="modal-content">
-            <h2>Certificado Válido</h2>
-            <p class="h4">Certificado registrado e emitido pela MVB CURSOS. Válido em todo território nacional.</p>
-            <p class="h5" id="nome"></p>
-            <p class="h5" id="cpfDisplay"></p>
-            <p class="h5" id="curso"></p>
-            <p class="h5" id="cidade"></p>
-            <p class="h5">Para maiores informações, envie um e-mail para suporte@mvbcursos.com.br.</p>
+        <div class="modal-content" id="modalContent">
+            <!-- Informações do certificado serão exibidas aqui -->
         </div>
     </div>
 
     <script>
+        const certificados = [
+            { cpf: "62200516371", nome: "RICKELME PRIVADO PEREIRA", curso: "PÁ CARREGADEIRA, RETROESCAVADEIRA, ESCAVADEIRA HIDRÁULICA, TRATOR AGRÍCOLA", cidade: "ALCÂNTARA - MA" },
+            { cpf: "12345678901", nome: "ANA CAROLINA DA SILVA", curso: "MONTAGEM E MANUTENÇÃO DE COMPUTADORES", cidade: "RIO DE JANEIRO - RJ" },
+            { cpf: "23456789012", nome: "JOÃO PAULO SOUZA", curso: "LÍNGUA INGLESA - NÍVEL BÁSICO", cidade: "SÃO PAULO - SP" },
+            { cpf: "34567890123", nome: "MARIA FERNANDA COSTA", curso: "GESTÃO DE PESSOAS", cidade: "BELO HORIZONTE - MG" },
+            { cpf: "45678901234", nome: "PEDRO HENRIQUE SANTOS", curso: "DESENVOLVIMENTO WEB", cidade: "SALVADOR - BA" },
+            { cpf: "56789012345", nome: "CARLA LUCIA PEREIRA", curso: "ADMINISTRAÇÃO DE REDES", cidade: "FORTALEZA - CE" },
+            { cpf: "67890123456", nome: "JOSÉ ALMEIDA", curso: "FUNDAMENTOS DE MARKETING", cidade: "MANAUS - AM" },
+            { cpf: "78901234567", nome: "LUIZA MARIA ALVES", curso: "DESIGN GRÁFICO", cidade: "PORTO ALEGRE - RS" },
+            { cpf: "89012345678", nome: "FERNANDO SOUZA", curso: "MATEMÁTICA FINANCEIRA", cidade: "CURITIBA - PR" },
+            { cpf: "90123456789", nome: "BEATRIZ ROCHA", curso: "GESTÃO DE PROJETOS", cidade: "BRASÍLIA - DF" },
+            { cpf: "11223344556", nome: "VITOR HUGO GOMES", curso: "GESTÃO DE NEGÓCIOS", cidade: "RECIFE - PE" },
+            { cpf: "22334455667", nome: "ISABELA CRUZ", curso: "CUIDADO DE IDOSOS", cidade: "NATAL - RN" },
+            { cpf: "33445566778", nome: "TOMÁS MARTINS", curso: "ELETROTÉCNICA", cidade: "GOIÂNIA - GO" },
+            { cpf: "44556677889", nome: "RITA DE CÁSSIA LIMA", curso: "FARMÁCIA E QUÍMICA", cidade: "CAMPO GRANDE - MS" },
+            { cpf: "55667788990", nome: "MÁRIO DOS SANTOS", curso: "ADMINISTRAÇÃO E EMPREENDORISMO", cidade: "CUIABÁ - MT" },
+            { cpf: "66778899001", nome: "FABIOLA COSTA", curso: "FINANÇAS PESSOAIS", cidade: "MACEIÓ - AL" },
+            { cpf: "77889900112", nome: "HUGO LOPES", curso: "SEGURANÇA DO TRABALHO", cidade: "TERESINA - PI" },
+            { cpf: "88990011223", nome: "TATIANA FERREIRA", curso: "COMUNICAÇÃO E MÍDIAS SOCIAIS", cidade: "SÃO LUÍS - MA" },
+            { cpf: "99001122334", nome: "GUSTAVO MARTINS", curso: "DESENVOLVIMENTO DE SOFTWARE", cidade: "ARACAJU - SE" }
+        ];
+
         function validarCPF() {
             let cpf = document.getElementById('cpf').value;
+            let certificado = certificados.find(c => c.cpf === cpf);
 
-            fetch('http://localhost:3000/validate-cpf', {  // Altere para a URL de produção do seu servidor
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ cpf: cpf }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data) {
-                    document.getElementById('nome').textContent = `Nome: ${data.nome}`;
-                    document.getElementById('cpfDisplay').textContent = `CPF: ${data.cpf}`;
-                    document.getElementById('curso').textContent = `Curso: ${data.curso}`;
-                    document.getElementById('cidade').textContent = `Cidade: ${data.cidade}`;
-                    
-                    // Exibe o modal
+            if (certificado) {
+                // Exibe o modal após 2 segundos
+                setTimeout(() => {
+                    let modalContent = document.getElementById('modalContent');
+                    modalContent.innerHTML = `
+                        <h2>Certificado Válido</h2>
+                        <p class="h4">Certificado registrado e emitido pela MVB CURSOS. Válido em todo território nacional.</p>
+                        <p class="h5"><strong>NOME:</strong> ${certificado.nome}</p>
+                        <p class="h5"><strong>CPF:</strong> ${certificado.cpf}</p>
+                        <p class="h5"><strong>CURSO:</strong> ${certificado.curso}</p>
+                        <p class="h5"><strong>CIDADE:</strong> ${certificado.cidade}</p>
+                        <p class="h5">Para maiores informações, envie um e-mail para suporte@mvbcursos.com.br.</p>
+                    `;
                     document.getElementById('modal').style.display = 'flex';
-                    
-                    // Esconde o formulário
                     document.getElementById('formulario').style.display = 'none';
-                }
-            })
-            .catch(error => {
-                alert("Erro ao validar o CPF.");
-                console.error(error);
-            });
+                }, 2000);
+            } else {
+                alert("CPF não encontrado ou inválido.");
+            }
         }
     </script>
 </body>
